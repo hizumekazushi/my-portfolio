@@ -1,33 +1,19 @@
 <script setup>
-import { ref } from "vue";
 import Button from "primevue/button";
+import Card from "primevue/card";
+import { computed } from "vue";
+import { projects } from "@/data/projects";
 import ProjectCard from "@/components/ProjectCard.vue";
+import { useRouter } from "vue-router";
 
-const projects = ref([
-  {
-    image: "https://primefaces.org/cdn/primevue/images/galleria/galleria1.jpg",
-    title: "私のポートフォリオサイト",
-    description: "Vue.jsとPrimeVueで作成したサイトです。",
-    tags: [
-      { name: "Vue.js", severity: "success" },
-      { name: "PrimeVue", severity: "info" },
-    ],
-  },
-  {
-    image: "https://primefaces.org/cdn/primevue/images/galleria/galleria2.jpg",
-    title: "予約管理システム",
-    description: "飲食店向けの予約管理アプリ。",
-    tags: [
-      { name: "TypeScript", severity: "warning" },
-      { name: "Node.js", severity: "danger" },
-    ],
-  },
-]);
+const router = useRouter();
 
-const scrollToProjects = () => {
-  document.getElementById("projects").scrollIntoView({
-    behavior: "smooth",
-  });
+const featuredProjects = computed(() => {
+  return projects.value.slice(0, 3);
+});
+
+const goToProjects = () => {
+  router.push("/projects");
 };
 </script>
 
@@ -48,45 +34,98 @@ const scrollToProjects = () => {
             icon="pi pi-arrow-right"
             iconPos="right"
             size="large"
-            @click="scrollToProjects"
+            @click="goToProjects"
           />
         </div>
       </div>
     </div>
 
-    <div id="projects" class="projects-section">
-      <div class="grid justify-content-center">
-        <div class="col-12 md:col-10 lg:col-8">
-          <h2 class="section-title" data-aos="fade-up">Projects</h2>
-          <div class="grid justify-content-center gap-4">
-            <ProjectCard
-              v-for="(project, index) in projects"
-              :key="project.title"
-              :image="project.image"
-              :title="project.title"
-              :description="project.description"
-              :tags="project.tags"
-              data-aos="fade-up"
-              :data-aos-delay="100 * index"
-            />
-          </div>
+    <div class="link-cards-section">
+      <div class="grid">
+        <div class="col-12 md:col-6 lg:col-3" data-aos="fade-up">
+          <RouterLink to="/projects" class="card-link">
+            <Card class="link-card">
+              <template #title>Projects</template>
+              <template #content
+                ><p>これまでの制作物をまとめています。</p></template
+              >
+            </Card>
+          </RouterLink>
         </div>
+
+        <div
+          class="col-12 md:col-6 lg:col-3"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          <RouterLink to="/about" class="card-link">
+            <Card class="link-card">
+              <template #title>About Me</template>
+              <template #content
+                ><p>私の経歴やスキルを紹介しています。</p></template
+              >
+            </Card>
+          </RouterLink>
+        </div>
+
+        <div
+          class="col-12 md:col-6 lg:col-3"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
+          <RouterLink to="/hobbies" class="card-link">
+            <Card class="link-card">
+              <template #title>Hobbies</template>
+              <template #content
+                ><p>私の趣味や好きなことを紹介しています。</p></template
+              >
+            </Card>
+          </RouterLink>
+        </div>
+
+        <div
+          class="col-12 md:col-6 lg:col-3"
+          data-aos="fade-up"
+          data-aos-delay="300"
+        >
+          <RouterLink to="/contact" class="card-link">
+            <Card class="link-card">
+              <template #title>Contact</template>
+              <template #content
+                ><p>お仕事の依頼などはこちらからお願いします。</p></template
+              >
+            </Card>
+          </RouterLink>
+        </div>
+      </div>
+    </div>
+
+    <div class="featured-projects-section">
+      <h2 class="section-title" data-aos="fade-up">Featured Projects</h2>
+      <div class="grid justify-content-center gap-4">
+        <ProjectCard
+          v-for="(project, index) in featuredProjects"
+          :key="project.id"
+          :project="project"
+          data-aos="fade-up"
+          :data-aos-delay="100 * index"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+/* Hero Section */
 .hero-container {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
+  height: 90vh;
   text-align: center;
   overflow: hidden;
 }
-
 .hero-bg {
   position: absolute;
   top: 0;
@@ -98,7 +137,6 @@ const scrollToProjects = () => {
   background-position: center;
   z-index: 0;
 }
-
 .hero-bg::before {
   content: "";
   position: absolute;
@@ -108,35 +146,71 @@ const scrollToProjects = () => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
 }
-
 .hero-content {
   position: relative;
   z-index: 1;
+  padding: 1rem;
 }
-
 .hero-title {
-  font-size: 4.5rem;
+  font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
-
 .hero-subtitle {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #e0e0e0;
   margin-bottom: 2.5rem;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
 }
 
-.projects-section {
-  padding: 6rem 1rem;
+/* Link Cards Section */
+.link-cards-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+}
+.card-link {
+  text-decoration: none;
+}
+.link-card {
+  height: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #e5e7eb;
+}
+.link-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* Featured Projects Section */
+.featured-projects-section {
+  padding: 4rem 1rem;
+  background-color: #fafafa;
+}
 .section-title {
-  text-align: center;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 3rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 4.5rem;
+  }
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+  .link-cards-section {
+    padding: 6rem 2rem;
+  }
+  .featured-projects-section {
+    padding: 6rem 2rem;
+  }
+  .section-title {
+    font-size: 2.5rem;
+  }
 }
 </style>

@@ -14,6 +14,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@motionone/vue": "^10.16.4",
     "@primevue/themes": "^4.3.9",
     "aos": "^2.3.4",
     "pinia": "^3.0.3",
